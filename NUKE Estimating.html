@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///Users/kastriotcikaqi/Downloads/estimate-tracker_3.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NUKE Estimating</title>
+<link href="./NUKE Estimating_files/css2" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: #fff;
+  color: #111;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+/* ── NAV ── */
+nav {
+  background: #fff;
+  padding: 0 2.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-bottom: none;
+}
+
+.nav-logo {
+  font-size: 0.55rem;
+  color: #111;
+  letter-spacing: 2px;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.nav-logo:hover { background: #f0f0f0; }
+
+.nav-tab {
+  font-size: 0.55rem;
+  color: #111;
+  letter-spacing: 2px;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.nav-tab:hover { background: #f0f0f0; }
+.nav-tab.active { background: #111; color: #fff; }
+
+/* ── HOME ── */
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  gap: 2.5rem;
+  position: relative;
+}
+
+.fan-container {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  cursor: pointer;
+}
+.fan-wrap {
+  position: absolute;
+  top: 0; left: 0;
+  filter: drop-shadow(0 0 22px rgba(0,0,0,0.12));
+  cursor: pointer;
+  transition: filter 0.3s;
+}
+.fan-wrap:hover { filter: drop-shadow(0 0 36px rgba(0,0,0,0.22)); }
+
+.home-label {
+  font-size: 0.42rem;
+  color: #bbb;
+  letter-spacing: 3px;
+}
+
+.admin-dot {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #e8e8e8;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-dot:hover { background: #ccc; }
+
+/* ── SCREENS ── */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  background: #f5f5f5;
+}
+.screen.visible { display: flex; }
+.screen::-webkit-scrollbar { width: 4px; }
+.screen::-webkit-scrollbar-thumb { background: #bbb; }
+
+.screen-inner {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  flex: 1;
+}
+
+/* ── CATALOG HEADER ── */
+.cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 0.75rem;
+}
+
+.cat-title {
+  font-size: 0.9rem;
+  color: #111;
+  letter-spacing: 2px;
+  margin-bottom: 0.6rem;
+}
+.cat-title::before {
+  content: '> ';
+  color: #aaa;
+}
+
+.cat-sub {
+  font-size: 0.5rem;
+  color: #aaa;
+  letter-spacing: 2px;
+  margin-left: 1rem;
+}
+
+.search-row {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  margin: 0 0.75rem;
+}
+
+.search-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 2px solid #111;
+  color: #111;
+  outline: none;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+.search-input:focus { background: #f5f5f5; }
+.search-input::placeholder { color: #ccc; }
+
+.search-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  padding: 0.75rem 1.1rem;
+  background: #111;
+  color: #fff;
+  border: 2px solid #111;
+  cursor: pointer;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.search-btn:hover { background: #444; }
+
+.search-clear {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  background: #fff;
+  color: #aaa;
+  border: 2px solid #ddd;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+  display: none;
+}
+.search-clear.visible { display: block; }
+.search-clear:hover { border-color: #111; color: #111; }
+
+.search-count {
+  font-size: 0.5rem;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+/* ── GRID ── */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.take-card {
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border: 2px solid #111;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.take-card:hover { background: #fff; border-color: #999; transform: translate(-3px, -3px); }
+.take-card:hover .card-title { color: #555; }
+.take-card:hover .card-price { color: #111; }
+.take-card:hover .card-meta  { color: #888; }
+.take-card:hover .card-footer { border-top-color: #aaa; }
+
+.card-location {
+  font-size: 0.9rem;
+  color: #111;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.card-title {
+  font-size: 0.5rem;
+  color: #888;
+  margin-top: 0.5rem;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 2px solid #eee;
+}
+
+.card-price {
+  font-size: 0.75rem;
+  color: #111;
+}
+
+.card-meta {
+  font-size: 0.5rem;
+  color: #bbb;
+  letter-spacing: 1px;
+}
+
+.catalog-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 0.5rem;
+  color: #ccc;
+  line-height: 3;
+  border: 2px dashed #ddd;
+}
+
+/* ── BACK BTN ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  color: #888;
+  cursor: pointer;
+  margin-bottom: 1.75rem;
+  background: none;
+  border: none;
+  letter-spacing: 1px;
+  transition: color 0.15s;
+}
+.back-btn:hover { color: #111; }
+
+/* ── DETAIL ── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.detail-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-pill {
+  background: #fff;
+  border: 2px solid #111;
+  padding: 0.85rem 1rem;
+}
+.stat-pill-label {
+  font-size: 0.48rem;
+  color: #aaa;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+.stat-pill-value {
+  font-size: 0.6rem;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+.detail-title {
+  font-size: 0.7rem;
+  margin-bottom: 0.75rem;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+.detail-type-badge {
+  display: inline-block;
+  font-size: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: #111;
+  color: #fff;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.detail-desc {
+  font-size: 0.52rem;
+  color: #555;
+  line-height: 2.8;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+/* ── BUY BOX ── */
+.buy-box {
+  background: #fff;
+  border: 2px solid #111;
+  padding: 1.5rem;
+  position: sticky;
+  top: 2rem;
+}
+
+.buy-box-price {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.buy-box-sub {
+  font-size: 0.48rem;
+  color: #aaa;
+  margin-bottom: 1.25rem;
+  letter-spacing: 1px;
+  line-height: 2;
+}
+
+.buy-box-features { margin-bottom: 1.5rem; }
+.buy-feature {
+  font-size: 0.52rem;
+  color: #555;
+  padding: 0.35rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 2;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f5f5f5;
+}
+.buy-feature::before { content: '//'; color: #bbb; font-size: 0.35rem; }
+
+.btn-buy {
+  width: 100%;
+  padding: 1rem;
+  background: #111;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+  position: relative;
+}
+.btn-buy::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; right: -4px;
+  width: 100%; height: 100%;
+  background: #aaa;
+  z-index: -1;
+}
+.btn-buy:hover { background: #333; }
+
+/* ── BUY FLOW ── */
+.buy-screen-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+.buy-title {
+  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+.buy-sub {
+  font-size: 0.38rem;
+  color: #aaa;
+  margin-bottom: 2rem;
+  line-height: 2.5;
+  letter-spacing: 1px;
+}
+
+.buy-summary {
+  background: #111;
+  color: #fff;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.buy-summary-name  { font-size: 0.4rem; letter-spacing: 1px; line-height: 2; }
+.buy-summary-price { font-size: 0.65rem; }
+
+.form-label {
+  display: block;
+  font-size: 0.4rem;
+  color: #888;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+
+.form-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: #fff;
+  border: 2px solid #ddd;
+  color: #111;
+  outline: none;
+  margin-bottom: 1.1rem;
+  transition: border-color 0.15s;
+  letter-spacing: 1px;
+}
+.form-input:focus { border-color: #111; }
+.form-input::placeholder { color: #ddd; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.35rem;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.secure-note {
+  text-align: center;
+  font-size: 0.32rem;
+  color: #bbb;
+  margin-top: 1rem;
+  line-height: 2.5;
+  letter-spacing: 1px;
+}
+
+/* ── CONFIRM ── */
+.confirm-wrap {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.confirm-icon  { font-size: 3rem; margin-bottom: 1.5rem; }
+.confirm-title { font-size: 0.75rem; margin-bottom: 1rem; letter-spacing: 1px; }
+.confirm-sub   {
+  font-size: 0.38rem;
+  color: #777;
+  line-height: 3;
+  margin-bottom: 2rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-back-catalog {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  padding: 0.85rem 2rem;
+  background: #fff;
+  color: #111;
+  border: 2px solid #111;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+.btn-back-catalog:hover { background: #111; color: #fff; }
+
+/* ── OVERLAYS ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 900;
+  align-items: center;
+  justify-content: center;
+}
+.overlay.open { display: flex; }
+
+.modal-box {
+  background: #fff;
+  border: 2px solid #111;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem;
+  box-shadow: 6px 6px 0 #111;
+  animation: popIn 0.15s ease;
+}
+@keyframes popIn {
+  from { transform: scale(0.95) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-scroll {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.modal-scroll::-webkit-scrollbar { width: 4px; }
+.modal-scroll::-webkit-scrollbar-thumb { background: #ddd; }
+
+.modal-box-title {
+  font-size: 0.65rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+.modal-box-sub {
+  font-size: 0.38rem;
+  color: #aaa;
+  margin-bottom: 1.5rem;
+  line-height: 2.5;
+  letter-spacing: 1px;
+}
+.modal-error {
+  font-size: 0.38rem;
+  color: #cc3333;
+  margin-top: -0.5rem;
+  margin-bottom: 0.9rem;
+  display: none;
+  letter-spacing: 1px;
+}
+
+.btn-primary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  width: 100%;
+  padding: 0.9rem;
+  background: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #333; }
+
+.btn-ghost {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  width: 100%;
+  padding: 0.8rem;
+  background: none;
+  color: #aaa;
+  border: 2px solid #ddd;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: #111; color: #111; }
+
+/* ── ADMIN ── */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-title {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.btn-add-listing {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  padding: 0.7rem 1.1rem;
+  background: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+.btn-add-listing:hover { background: #333; }
+
+.admin-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.admin-row {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  transition: border-color 0.15s;
+}
+.admin-row:hover { border-color: #111; }
+
+.admin-row-info { flex: 1; min-width: 200px; }
+.admin-row-title {
+  font-size: 0.5rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+  line-height: 2;
+}
+.admin-row-meta {
+  font-size: 0.35rem;
+  color: #aaa;
+  letter-spacing: 1px;
+  line-height: 2;
+}
+
+.admin-row-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-row-price { font-size: 0.6rem; letter-spacing: 1px; }
+
+.btn-delete {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.35rem;
+  padding: 0.5rem 0.8rem;
+  background: none;
+  border: 2px solid #ddd;
+  color: #aaa;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+.btn-delete:hover { border-color: #cc3333; color: #cc3333; }
+
+.admin-empty {
+  text-align: center;
+  padding: 3rem;
+  font-size: 0.45rem;
+  color: #ccc;
+  line-height: 3;
+  border: 2px dashed #e0e0e0;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 720px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .buy-box { position: static; }
+  .catalog-grid { grid-template-columns: repeat(2, 1fr); }
+  nav { padding: 0 1.25rem; }
+  .screen-inner { padding: 1.5rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <span class="nav-logo" onclick="goHome()">
+    <span style="font-size:0.9rem;position:relative;top:-2px;">🍄</span>
+    NUKE
+  </span>
+  <span class="nav-tab" id="tab-est" onclick="showCatalog()">ESTIMATING</span>
+</nav>
+
+<!-- ── HOME ── -->
+<div class="home" id="home">
+  <div class="fan-container" id="fan-container">
+    <svg class="fan-wrap" id="fan-svg" width="260" height="260" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg" style="image-rendering: pixelated; transform: rotate(160.5deg);">
+      <path d="M13 13 C11.8 10.8,11 7.2,12.2 4.4 C12.8 3,13.5 2.8,13.8 4.4 C14.2 6.2,14 10,13 13Z" fill="#111" stroke="#111" stroke-width="0.15"></path>
+      <path d="M13 13 C15.3 12.2,18.6 12.6,20.8 11.2 C22 10.4,22.1 9.7,20.7 9.4 C19 9,15.8 10,13 13Z" fill="#555" stroke="#111" stroke-width="0.15"></path>
+      <path d="M13 13 C14.2 15.3,14.8 18.8,13.6 21.5 C13 22.9,12.3 23.1,12 21.5 C11.6 19.7,11.8 16,13 13Z" fill="#111" stroke="#111" stroke-width="0.15"></path>
+      <path d="M13 13 C10.7 13.8,7.4 13.4,5.2 14.8 C4 15.6,3.9 16.3,5.3 16.6 C7 17,10.2 16,13 13Z" fill="#555" stroke="#111" stroke-width="0.15"></path>
+      <path d="M13 13 C11.6 10.8,8.4 9.6,6.2 7.8 C5 6.8,4.8 6.1,6 5.7 C7.6 5.2,10.4 7,13 13Z" fill="#888" stroke="#111" stroke-width="0.15"></path>
+      <path d="M13 13 C14.4 15.2,17.6 16.4,19.8 18.2 C21 19.2,21.2 19.9,20 20.3 C18.4 20.8,15.6 19,13 13Z" fill="#888" stroke="#111" stroke-width="0.15"></path>
+      <circle cx="13" cy="13" r="2.8" fill="#fff" stroke="#111" stroke-width="0.3"></circle>
+      <circle cx="13" cy="13" r="2" fill="#f0f0f0" stroke="#ccc" stroke-width="0.15"></circle>
+      <circle cx="13" cy="13" r="0.8" fill="#111"></circle>
+      <circle cx="13" cy="13" r="0.3" fill="#fff"></circle>
+    </svg>
+  </div>
+  <span class="home-label">TAP ESTIMATING TO BROWSE</span>
+  <!-- Hidden admin trigger -->
+  <div class="admin-dot" id="admin-dot" title=""></div>
+</div>
+
+<!-- ── CATALOG ── -->
+<div class="screen" id="screen-catalog">
+  <div class="screen-inner">
+    <div class="cat-header" id="cat-header">
+      <div class="cat-title" id="cat-title">MECHANICAL</div>
+      <div class="search-row" id="search-row" style="display:none;">
+        <input class="search-input" id="search-input" type="text" placeholder="Type location..." oninput="doSearch()">
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">[ X ]</button>
+      </div>
+      <button class="search-btn" id="find-btn" onclick="toggleSearch()">[ FIND ]</button>
+    </div>
+    <div class="search-count" id="search-count"></div>
+    <div class="catalog-grid" id="catalog-grid"></div>
+  </div>
+</div>
+
+<!-- ── DETAIL ── -->
+<div class="screen" id="screen-detail">
+  <div class="screen-inner">
+    <button class="back-btn" onclick="showCatalog()">← Back to catalog</button>
+    <div class="detail-grid" id="detail-grid"></div>
+  </div>
+</div>
+
+<!-- ── BUY FLOW ── -->
+<div class="screen" id="screen-buy">
+  <div class="buy-screen-inner">
+    <button class="back-btn" onclick="showDetail(currentItem)">← Back</button>
+    <div class="buy-title">Complete your purchase</div>
+    <div class="buy-sub">You'll receive a download link instantly after payment</div>
+
+    <div class="buy-summary">
+      <div class="buy-summary-name" id="buy-item-name">—</div>
+      <div class="buy-summary-price" id="buy-item-price">—</div>
+    </div>
+
+    <label class="form-label">Email address</label>
+    <input class="form-input" id="buy-email" type="email" placeholder="you@company.com">
+
+    <label class="form-label">Card number</label>
+    <input class="form-input" id="buy-card" type="text" placeholder="1234  5678  9012  3456" maxlength="19">
+
+    <div class="form-row">
+      <div>
+        <label class="form-label">Expiry</label>
+        <input class="form-input" id="buy-expiry" type="text" placeholder="MM / YY" maxlength="7">
+      </div>
+      <div>
+        <label class="form-label">CVV</label>
+        <input class="form-input" id="buy-cvv" type="text" placeholder="123" maxlength="3">
+      </div>
+    </div>
+
+    <div class="card-row">🔒 Payments are encrypted and secure</div>
+
+    <button class="btn-primary" onclick="completePurchase()">Pay <span id="buy-btn-price"></span></button>
+    <div class="secure-note">Your email is only used to deliver your file. We don't store payment info.</div>
+  </div>
+</div>
+
+<!-- ── CONFIRMATION ── -->
+<div class="screen" id="screen-confirm">
+  <div class="confirm-wrap">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-title">You're all set!</div>
+    <div class="confirm-sub">
+      Your take-off has been sent to<br>
+      <strong id="confirm-email">—</strong><br><br>
+      Check your inbox — the download link will arrive within a minute.<br>
+      You have <strong>2 downloads</strong> available.
+    </div>
+    <button class="btn-back-catalog" onclick="showCatalog()">Browse more take-offs</button>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="screen" id="screen-admin">
+  <div class="screen-inner" style="max-width:800px;">
+    <div class="admin-header">
+      <div>
+        <div class="admin-title">Admin — Listings</div>
+        <div style="font-size:0.8rem;color:#aaa;margin-top:0.2rem;">Manage your take-off catalog</div>
+      </div>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="btn-add-listing" onclick="openAddModal()">+ Add Take-Off</button>
+        <button class="btn-ghost" style="width:auto;padding:0.65rem 1rem;margin:0;" onclick="adminLogout()">Log out</button>
+      </div>
+    </div>
+    <div class="admin-list" id="admin-list"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN LOGIN OVERLAY ── -->
+<div class="overlay" id="overlay-login" onclick="handleLoginOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-box-title">Admin Access</div>
+    <div class="modal-box-sub">Enter your password to manage listings</div>
+    <label class="form-label">Password</label>
+    <input class="form-input" id="admin-pw" type="password" placeholder="••••••••" onkeydown="if(event.key===&#39;Enter&#39;) doLogin()">
+    <div class="modal-error" id="login-error">Incorrect password. Try again.</div>
+    <button class="btn-primary" onclick="doLogin()">Enter</button>
+    <button class="btn-ghost" onclick="closeLoginOverlay()">Cancel</button>
+  </div>
+</div>
+
+<!-- ── ADD LISTING OVERLAY ── -->
+<div class="overlay" id="overlay-add" onclick="handleAddOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-box-title">Add Take-Off</div>
+    <div class="modal-box-sub">Upload a new project listing</div>
+
+    <label class="form-label">Location *</label>
+    <input class="form-input" id="a-location" type="text" placeholder="e.g. Manhattan, NY">
+
+    <label class="form-label">Project Name (optional)</label>
+    <input class="form-input" id="a-title" type="text" placeholder="e.g. 24-Story Office Tower">
+
+    <label class="form-label">PDF File *</label>
+    <input class="form-input" id="a-pdf" type="file" accept=".pdf" style="padding:0.6rem 1rem;cursor:pointer;">
+
+    <label class="form-label">Price ($) *</label>
+    <input class="form-input" id="a-price" type="number" placeholder="e.g. 149">
+
+    <button class="btn-primary" onclick="saveListing()">Add Listing</button>
+    <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+
+// ── CONFIG — update these with your Supabase project values ──
+const SUPABASE_URL  = 'https://basfxkyvzsqgxfpsytzn.supabase.co'
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhc2Z4a3l2enNxZ3hmcHN5dHpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MDQxMjEsImV4cCI6MjA4ODA4MDEyMX0.FlY0KuEqW3ez-iuec00ICCUL01IUdcFlxwmAWys-TSM'
+
+/* ── FAN ── */
+const fanEl = document.getElementById('fan-svg');
+const fanContainer = document.getElementById('fan-container');
+let fanAngle = 0, fanSpeed = 0.15, fanHover = false;
+const FAN_BASE = 0.15, FAN_MAX = 20, FAN_ACCEL = 0.06, FAN_DECEL = 0.025;
+(function spin() {
+  fanSpeed = fanHover ? Math.min(fanSpeed + FAN_ACCEL, FAN_MAX) : Math.max(fanSpeed - FAN_DECEL, FAN_BASE);
+  fanAngle = (fanAngle + fanSpeed) % 360;
+  fanEl.style.transform = `rotate(${fanAngle}deg)`;
+  requestAnimationFrame(spin);
+})();
+fanContainer.addEventListener('mouseenter', () => fanHover = true);
+fanContainer.addEventListener('mouseleave', () => fanHover = false);
+
+/* ── ADMIN DOT (hidden trigger) ── */
+let dotClicks = 0, dotTimer;
+document.getElementById('admin-dot').addEventListener('click', () => {
+  dotClicks++;
+  clearTimeout(dotTimer);
+  dotTimer = setTimeout(() => dotClicks = 0, 2000);
+  if (dotClicks >= 5) { dotClicks = 0; openLoginOverlay(); }
+});
+
+/* ── DATA ── */
+const ADMIN_PASS = 'nuke2024';
+let isAdmin = false;
+let currentFilter = 'all';
+let currentItem = null;
+
+const SEED = [
+  {
+    id: 1,
+    title: '24-Story Mixed-Use Tower HVAC',
+    type: 'commercial',
+    typeName: 'Commercial',
+    sqft: 180000,
+    pages: 48,
+    location: 'Midtown Manhattan, NY',
+    price: 350,
+    desc: 'Full HVAC mechanical take-off for a 24-story mixed-use tower in Midtown Manhattan. Includes complete ductwork layout, VAV system breakdown, chiller plant, cooling towers, and AHU schedules. Taken off directly from permit-set drawings using Procore. Ideal for contractors bidding commercial high-rise work in NYC.'
+  },
+  {
+    id: 2,
+    title: 'Luxury Residential Tower — HVAC',
+    type: 'residential',
+    typeName: 'Residential',
+    sqft: 92000,
+    pages: 30,
+    location: 'Upper East Side, NY',
+    price: 220,
+    desc: 'HVAC mechanical take-off for a 18-floor luxury residential building. Covers fan coil units per apartment, fresh air system, exhaust risers, and rooftop equipment. Procore take-off with itemized quantities and material breakdowns.'
+  },
+  {
+    id: 3,
+    title: 'Industrial Warehouse HVAC — Bronx',
+    type: 'industrial',
+    typeName: 'Industrial',
+    sqft: 65000,
+    pages: 22,
+    location: 'Hunts Point, Bronx NY',
+    price: 149,
+    desc: 'Complete HVAC take-off for a large industrial warehouse facility in the Bronx. Includes unit heaters, exhaust fans, make-up air units, and ductwork runs. Straightforward take-off for contractors bidding industrial HVAC in NYC outer boroughs.'
+  },
+  {
+    id: 4,
+    title: 'Boutique Hotel HVAC — Brooklyn',
+    type: 'commercial',
+    typeName: 'Commercial',
+    sqft: 38000,
+    pages: 26,
+    location: 'DUMBO, Brooklyn NY',
+    price: 189,
+    desc: 'Full HVAC mechanical take-off for a boutique hotel conversion in DUMBO, Brooklyn. Covers VRF system, DOAS units, kitchen exhaust, bathroom exhaust risers, and penthouse equipment. Ideal for mid-size contractors working in the hospitality sector.'
+  }
+];
+
+let listings = JSON.parse(localStorage.getItem('nuke_listings') || 'null') || SEED;
+let nextId   = Math.max(...listings.map(l => l.id), 0) + 1;
+
+function saveListings() {
+  localStorage.setItem('nuke_listings', JSON.stringify(listings));
+}
+
+function fmt(n) {
+  return '$' + Number(n).toLocaleString('en-US');
+}
+
+function fmtSqft(n) {
+  return Number(n).toLocaleString('en-US') + ' sqft';
+}
+
+/* ── NAVIGATION ── */
+function hideAll() {
+  document.getElementById('home').style.display = 'none';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('visible'));
+  document.getElementById('tab-est').classList.remove('active');
+}
+
+function goHome() {
+  document.getElementById('home').style.display = 'flex';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('visible'));
+  document.getElementById('tab-est').classList.remove('active');
+}
+
+function showScreen(id) {
+  hideAll();
+  document.getElementById(id).classList.add('visible');
+  document.getElementById('tab-est').classList.add('active');
+}
+
+function showCatalog() {
+  showScreen('screen-catalog');
+  renderCatalog();
+}
+
+function showDetail(item) {
+  currentItem = item;
+  showScreen('screen-detail');
+  renderDetail(item);
+}
+
+function showBuy(item) {
+  currentItem = item;
+  showScreen('screen-buy');
+  document.getElementById('buy-item-name').textContent  = item.title;
+  document.getElementById('buy-item-price').textContent = fmt(item.price);
+  document.getElementById('buy-btn-price').textContent  = fmt(item.price);
+  document.getElementById('buy-email').value   = '';
+  document.getElementById('buy-card').value    = '';
+  document.getElementById('buy-expiry').value  = '';
+  document.getElementById('buy-cvv').value     = '';
+}
+
+async function completePurchase() {
+  const email = document.getElementById('buy-email').value.trim();
+  if (!email) { alert('Please enter your email.'); return; }
+
+  const btn = document.querySelector('#screen-buy .btn-primary');
+  btn.textContent = 'Redirecting to payment...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({
+        project_id: currentItem.id,
+        buyer_email: email
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.checkout_url) {
+      // Redirect to Stripe checkout
+      window.location.href = data.checkout_url;
+    } else {
+      alert('Something went wrong. Please try again.');
+      btn.textContent = 'Pay ' + fmt(currentItem.price);
+      btn.disabled = false;
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Connection error. Please try again.');
+    btn.textContent = 'Pay ' + fmt(currentItem.price);
+    btn.disabled = false;
+  }
+}
+
+/* ── CATALOG ── */
+let searchQuery = '';
+
+function toggleSearch() {
+  const row = document.getElementById('search-row');
+  const title = document.getElementById('cat-title');
+  const isHidden = row.style.display === 'none' || row.style.display === '';
+  if (isHidden) {
+    row.style.display = 'flex';
+    title.style.display = 'none';
+    setTimeout(() => document.getElementById('search-input').focus(), 50);
+  } else {
+    row.style.display = 'none';
+    title.style.display = '';
+    clearSearch();
+  }
+}
+
+function doSearch() {
+  searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+  const clearBtn = document.getElementById('search-clear');
+  clearBtn.classList.toggle('visible', searchQuery.length > 0);
+  renderCatalog();
+}
+
+function clearSearch() {
+  searchQuery = '';
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-clear').classList.remove('visible');
+  document.getElementById('search-row').style.display = 'none';
+  document.getElementById('cat-title').style.display = '';
+  renderCatalog();
+}
+
+function renderCatalog() {
+  const grid = document.getElementById('catalog-grid');
+  const countEl = document.getElementById('search-count');
+
+  const filtered = searchQuery
+    ? listings.filter(l =>
+        l.location.toLowerCase().includes(searchQuery) ||
+        l.title.toLowerCase().includes(searchQuery) ||
+        (l.desc && l.desc.toLowerCase().includes(searchQuery))
+      )
+    : listings;
+
+  if (searchQuery) {
+    countEl.textContent = filtered.length === 0
+      ? '> NO RESULTS FOUND'
+      : `> ${filtered.length} RESULT${filtered.length !== 1 ? 'S' : ''} FOUND`;
+  } else {
+    countEl.textContent = '';
+  }
+
+  if (!listings.length) {
+    grid.innerHTML = '<div class="catalog-empty">No take-offs listed yet.<br>Check back soon.</div>';
+    return;
+  }
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="catalog-empty">No projects match your search.<br>Try a different location or keyword.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+    <div class="take-card" onclick="showDetail(listings.find(l=>l.id===${item.id}))">
+      <div class="card-location">${item.location}</div>
+    </div>
+  `).join('');
+}
+
+/* ── DETAIL ── */
+function renderDetail(item) {
+  document.getElementById('detail-grid').innerHTML = `
+    <div>
+      <div class="detail-type-badge">${item.typeName}</div>
+      <div class="detail-title">${item.title}</div>
+      <div class="detail-desc">${item.desc}</div>
+      <div class="detail-stats">
+        <div class="stat-pill">
+          <div class="stat-pill-label">Location</div>
+          <div class="stat-pill-value">${item.location}</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-label">Sq Footage</div>
+          <div class="stat-pill-value">${fmtSqft(item.sqft)}</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-label">Pages</div>
+          <div class="stat-pill-value">${item.pages} pages</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-label">Type</div>
+          <div class="stat-pill-value">${item.typeName}</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="buy-box">
+        <div class="buy-box-price">${fmt(item.price)}</div>
+        <div class="buy-box-sub">One-time purchase · Instant delivery</div>
+        <div class="buy-box-features">
+          <div class="buy-feature">Full PDF take-off report</div>
+          <div class="buy-feature">Procore screenshots included</div>
+          <div class="buy-feature">Sent to your email instantly</div>
+          <div class="buy-feature">2 downloads included</div>
+        </div>
+        <button class="btn-buy" onclick="showBuy(currentItem)">Buy Now — ${fmt(item.price)}</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ── ADMIN ── */
+function openLoginOverlay() {
+  document.getElementById('admin-pw').value = '';
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('overlay-login').classList.add('open');
+  setTimeout(() => document.getElementById('admin-pw').focus(), 100);
+}
+
+function closeLoginOverlay() {
+  document.getElementById('overlay-login').classList.remove('open');
+}
+
+function handleLoginOverlay(e) {
+  if (e.target === document.getElementById('overlay-login')) closeLoginOverlay();
+}
+
+function doLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  if (pw === ADMIN_PASS) {
+    isAdmin = true;
+    closeLoginOverlay();
+    showScreen('screen-admin');
+    renderAdmin();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function adminLogout() {
+  isAdmin = false;
+  goHome();
+}
+
+function renderAdmin() {
+  const el = document.getElementById('admin-list');
+  if (!listings.length) {
+    el.innerHTML = '<div class="admin-empty">No listings yet.<br>Click "+ Add Take-Off" to get started.</div>';
+    return;
+  }
+  el.innerHTML = listings.map(item => `
+    <div class="admin-row">
+      <div class="admin-row-info">
+        <div class="admin-row-title">${item.title}</div>
+        <div class="admin-row-meta">${item.typeName} · ${item.location} · ${fmtSqft(item.sqft)} · ${item.pages} pages</div>
+      </div>
+      <div class="admin-row-right">
+        <div class="admin-row-price">${fmt(item.price)}</div>
+        <button class="btn-delete" onclick="deleteListing(${item.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteListing(id) {
+  if (!confirm('Delete this listing?')) return;
+  listings = listings.filter(l => l.id !== id);
+  saveListings();
+  renderAdmin();
+}
+
+/* ── ADD LISTING ── */
+function openAddModal() {
+  ['a-title','a-price','a-location'].forEach(id => document.getElementById(id).value = '');
+  const pdf = document.getElementById('a-pdf');
+  if (pdf) pdf.value = '';
+  document.getElementById('overlay-add').classList.add('open');
+}
+
+function closeAddModal() {
+  document.getElementById('overlay-add').classList.remove('open');
+}
+
+function handleAddOverlay(e) {
+  if (e.target === document.getElementById('overlay-add')) closeAddModal();
+}
+
+function saveListing() {
+  const location = document.getElementById('a-location').value.trim();
+  const title    = document.getElementById('a-title').value.trim() || location;
+  const price    = parseFloat(document.getElementById('a-price').value) || 0;
+  const pdfInput = document.getElementById('a-pdf');
+  const pdfFile  = pdfInput && pdfInput.files[0] ? pdfInput.files[0].name : '';
+
+  if (!location) { alert('Location is required.'); return; }
+  if (!price)    { alert('Price is required.'); return; }
+  if (!pdfFile)  { alert('Please attach a PDF file.'); return; }
+
+  listings.push({
+    id: nextId++,
+    title,
+    location,
+    price,
+    pdf: pdfFile,
+    type: 'commercial',
+    typeName: 'Mechanical',
+    sqft: 0,
+    pages: 0,
+    desc: ''
+  });
+
+  saveListings();
+  closeAddModal();
+  renderAdmin();
+}
+
+/* ── CARD INPUT FORMATTING ── */
+document.getElementById('buy-card').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,16);
+  this.value = v.replace(/(.{4})/g,'$1  ').trim();
+});
+document.getElementById('buy-expiry').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,4);
+  if (v.length > 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+  this.value = v;
+});
+</script>
+
+
+</body></html>
