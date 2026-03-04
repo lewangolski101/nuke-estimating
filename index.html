@@ -1296,51 +1296,61 @@ document.getElementById('buy-expiry').addEventListener('input', function() {
 </script>
 
 <!-- Google Places Autocomplete -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDivF6NFdG2r1yPaAAxIZjCXiF3L1oqkUc&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
-function initAutocomplete() {
-  const nycBounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(40.4774, -74.2591), // SW corner of NYC
-    new google.maps.LatLng(40.9176, -73.7004)  // NE corner of NYC
-  );
+(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+({key: "AIzaSyDivF6NFdG2r1yPaAAxIZjCXiF3L1oqkUc", v: "weekly"});
+</script>
+<script>
+async function initAutocomplete() {
+  const { Autocomplete } = await google.maps.importLibrary("places");
+
+  const nycBounds = {
+    north: 40.9176,
+    south: 40.4774,
+    east: -73.7004,
+    west: -74.2591
+  };
 
   const options = {
     bounds: nycBounds,
     strictBounds: true,
     componentRestrictions: { country: 'us' },
-    fields: ['formatted_address', 'name', 'geometry'],
-    types: ['address', 'establishment']
+    fields: ['formatted_address', 'name'],
+    types: ['geocode', 'establishment']
   };
 
   // Admin location input
   const adminInput = document.getElementById('a-location');
   if (adminInput) {
-    const adminAuto = new google.maps.places.Autocomplete(adminInput, options);
+    const adminAuto = new Autocomplete(adminInput, options);
     adminAuto.addListener('place_changed', () => {
       const place = adminAuto.getPlace();
       if (place.formatted_address) {
-        adminInput.value = place.name 
+        adminInput.value = place.name
           ? place.name + ', ' + place.formatted_address.split(',').slice(-3).join(',').trim()
           : place.formatted_address;
       }
     });
   }
 
-  // Search input in catalog
+  // Search input
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
-    const searchAuto = new google.maps.places.Autocomplete(searchInput, options);
+    const searchAuto = new Autocomplete(searchInput, options);
     searchAuto.addListener('place_changed', () => {
       const place = searchAuto.getPlace();
       if (place.formatted_address) {
-        const parts = place.formatted_address.split(',');
-        // Use neighborhood/borough level for searching
-        searchInput.value = parts[0].trim();
+        searchInput.value = place.formatted_address.split(',')[0].trim();
         doSearch();
       }
     });
   }
 }
+
+// Init when search opens
+document.addEventListener('DOMContentLoaded', () => {
+  initAutocomplete();
+});
 </script>
 </body>
 </html>
