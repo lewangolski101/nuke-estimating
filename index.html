@@ -145,6 +145,7 @@ nav {
   text-align: center;
 }
 
+
 .admin-dot {
   position: absolute;
   bottom: 18px;
@@ -213,6 +214,7 @@ nav {
   padding: 0.75rem 1rem;
   background: var(--input-bg);
   border: 2px solid var(--text);
+  border-radius: 12px;
   color: var(--text);
   outline: none;
   letter-spacing: 1px;
@@ -231,6 +233,7 @@ nav {
   background: var(--text);
   color: var(--bg);
   border: 2px solid var(--text);
+  border-radius: 12px;
   cursor: pointer;
   letter-spacing: 1px;
   white-space: nowrap;
@@ -246,6 +249,7 @@ nav {
   background: var(--input-bg);
   color: var(--text-muted);
   border: 2px solid var(--border-dashed);
+  border-radius: 12px;
   cursor: pointer;
   letter-spacing: 1px;
   transition: all 0.15s;
@@ -790,6 +794,7 @@ img.emoji {
       <span id="fan-svg" class="mushroom-emoji">🍄</span>
     </div>
     <div class="home-brand">NUKE</div>
+
   </div>
   <div class="admin-dot" id="admin-dot" title=""></div>
 </div>
@@ -825,6 +830,8 @@ img.emoji {
       <div class="buy-summary-name" id="buy-item-name">—</div>
       <div class="buy-summary-price" id="buy-item-price">—</div>
     </div>
+    <label class="form-label">Legal Company Name</label>
+    <input class="form-input" id="buy-company" type="text" placeholder="e.g. Northern Wolves AC LLC">
     <label class="form-label">Email address</label>
     <input class="form-input" id="buy-email" type="email" placeholder="you@company.com">
     <label class="form-label">Card number</label>
@@ -891,8 +898,10 @@ img.emoji {
       </p>
 
       <p style="font-size:0.84rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;line-height:2.4;margin-bottom:1.75rem;">
-        We cover all five boroughs: Manhattan, Brooklyn, Queens, The Bronx, and Staten Island. New projects are added regularly. If plans are updated or an addendum is issued, buyers are notified by email and receive the updated take-off at no extra charge.
+        We currently cover Manhattan. New projects are added regularly. If plans are updated or an addendum is issued, buyers are notified by email and receive the updated take-off at no extra charge.
       </p>
+
+
 
       <p style="font-size:0.84rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;line-height:2.4;margin-bottom:1.75rem;">
         Your payment is processed securely through Stripe — one of the most trusted payment platforms in the world. We never see, store, or have access to your card number, expiry, or CVV. All payment data goes directly to Stripe over an encrypted connection.
@@ -906,7 +915,7 @@ img.emoji {
         Questions or custom requests? Reach us at
       </p>
       <p style="font-size:0.84rem;font-weight:700;letter-spacing:0.08em;line-height:2.4;">
-        info@nukeestimating.com
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b0b7bfb699b7acb2bcbcaaadb0b4b8adb0b7bef7bab6b4">[email&#160;protected]</a>
       </p>
 
     </div>
@@ -944,7 +953,7 @@ img.emoji {
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL  = 'https://basfxkyvzsqgxfpsytzn.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhc2Z4a3l2enNxZ3hmcHN5dHpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MDQxMjEsImV4cCI6MjA4ODA4MDEyMX0.FlY0KuEqW3ez-iuec00ICCUL01IUdcFlxwmAWys-TSM'
 
@@ -1040,6 +1049,7 @@ function showBuy(item) {
   document.getElementById('buy-item-name').textContent  = item.title;
   document.getElementById('buy-item-price').textContent = fmt(item.price);
   document.getElementById('buy-btn-price').textContent  = fmt(item.price);
+  document.getElementById('buy-company').value = '';
   document.getElementById('buy-email').value = '';
   document.getElementById('buy-card').value = '';
   document.getElementById('buy-expiry').value = '';
@@ -1216,6 +1226,8 @@ document.getElementById('buy-expiry').addEventListener('input', function() {
 });
 </script>
 
+
+
 <script>
 (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
 ({key: "AIzaSyDivF6NFdG2r1yPaAAxIZjCXiF3L1oqkUc", v: "weekly"});
@@ -1223,7 +1235,7 @@ document.getElementById('buy-expiry').addEventListener('input', function() {
 <script>
 async function initAutocomplete() {
   const { Autocomplete } = await google.maps.importLibrary("places");
-  const nycBounds = { north: 40.9176, south: 40.4774, east: -73.7004, west: -74.2591 };
+  const nycBounds = { north: 40.8820, south: 40.6981, east: -73.9067, west: -74.0479 };
   const options = { bounds: nycBounds, strictBounds: true, componentRestrictions: { country: 'us' }, fields: ['formatted_address', 'name'], types: ['geocode', 'establishment'] };
   const adminInput = document.getElementById('a-location');
   if (adminInput) {
@@ -1233,9 +1245,4 @@ async function initAutocomplete() {
       if (place.formatted_address) adminInput.value = place.name ? place.name + ', ' + place.formatted_address.split(',').slice(-3).join(',').trim() : place.formatted_address;
     });
   }
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    const searchAuto = new Autocomplete(searchInput, options);
-    searchAuto.addListener('place_changed', () => {
-      const place = searchAuto.getPlace();
- 
+  const s
