@@ -199,7 +199,7 @@ nav {
 
 
 .search-row {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 0.75rem;
   flex: 1;
@@ -802,12 +802,11 @@ img.emoji {
 <div class="screen" id="screen-catalog">
   <div class="screen-inner">
     <div class="cat-header" id="cat-header">
-      <div class="cat-title" id="cat-title">MECHANICAL</div>
-      <div class="search-row" id="search-row" style="display:none;">
-        <input class="search-input" id="search-input" type="text" placeholder="Type location..." oninput="doSearch()">
+      <div class="search-row" id="search-row">
+        <input class="search-input" id="search-input" type="text" placeholder="Search by location..." oninput="doSearch()">
         <button class="search-clear" id="search-clear" onclick="clearSearch()">[ X ]</button>
       </div>
-      <button class="search-btn" id="find-btn" onclick="toggleSearch()">[ FIND ]</button>
+      <button class="search-btn" id="find-btn">[ FIND ]</button>
     </div>
     <div class="search-count" id="search-count"></div>
     <div class="catalog-grid" id="catalog-grid"></div>
@@ -1036,7 +1035,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('visible');
   document.getElementById('tab-est').classList.add('active');
 }
-function showCatalog() { showScreen('screen-catalog'); renderCatalog(); }
+function showCatalog() { showScreen('screen-catalog'); renderCatalog(); setTimeout(() => { const el = document.getElementById('search-input'); if (el) el.focus(); }, 100); }
 function showAbout() { 
   showScreen('screen-about'); 
   document.getElementById('tab-est').classList.remove('active');
@@ -1086,18 +1085,7 @@ async function completePurchase() {
 /* ── CATALOG ── */
 let searchQuery = '';
 function toggleSearch() {
-  const row = document.getElementById('search-row');
-  const title = document.getElementById('cat-title');
-  const isHidden = row.style.display === 'none' || row.style.display === '';
-  if (isHidden) {
-    row.style.display = 'flex';
-    title.style.display = 'none';
-    setTimeout(() => document.getElementById('search-input').focus(), 50);
-  } else {
-    row.style.display = 'none';
-    title.style.display = '';
-    clearSearch();
-  }
+  document.getElementById('search-input').focus();
 }
 function doSearch() {
   searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
@@ -1108,8 +1096,6 @@ function clearSearch() {
   searchQuery = '';
   document.getElementById('search-input').value = '';
   document.getElementById('search-clear').classList.remove('visible');
-  document.getElementById('search-row').style.display = 'none';
-  document.getElementById('cat-title').style.display = '';
   renderCatalog();
 }
 function renderCatalog() {
